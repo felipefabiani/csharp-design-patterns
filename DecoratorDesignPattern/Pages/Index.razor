@@ -127,7 +127,8 @@
     protected override async Task OnInitializedAsync()
     {
         IWeatherService ws = new WeatherService(weatherClient);
-        weatherService = new WeatherServiceLoggingDecorator(ws, wsLogger);
+        IWeatherService wsLogging = new WeatherServiceLoggingDecorator(ws, wsLogger);
+        weatherService = new WeatherServiceCachingDecorator(wsLogging, memoryCache);
 
         await base.OnInitializedAsync();
         await GetCurrentWeather("Dublin");

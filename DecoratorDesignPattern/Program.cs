@@ -3,6 +3,7 @@ using DecoratorDesignPattern.Infrastructore;
 using DecoratorDesignPattern.OpenWeatherMap;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging.Configuration;
 using MudBlazor;
 using MudBlazor.Services;
@@ -17,6 +18,8 @@ var openWeatherSetting = builder.Configuration.GetSection("openweathermap").Get<
 builder.Services.AddSingleton(openWeatherSetting);
 
 builder.Services.AddHttpClient<WeatherClient>();
+
+builder.Services.AddMemoryCache();
 
 builder.Services.AddMudServices(config =>
 {
