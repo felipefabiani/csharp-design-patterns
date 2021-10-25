@@ -123,15 +123,8 @@
     private CurrentWeather currentWeather = CurrentWeather.BadRequest();
     private string location = string.Empty;
     
-    private IWeatherService weatherService;
     protected override async Task OnInitializedAsync()
     {
-        IWeatherService ws = new WeatherService(weatherClient);
-        IWeatherService wsLogging = new WeatherServiceLoggingDecorator(ws, wsLogger);
-        IWeatherService wsCaching = new WeatherServiceCachingDecorator(wsLogging, memoryCache);
-        IWeatherService wsSnackbar = new WeatherServiceSnackbarDecorator(wsCaching, snackbar);
-        weatherService = wsSnackbar;
-
         await base.OnInitializedAsync();
         await GetCurrentWeather("Dublin");
     }

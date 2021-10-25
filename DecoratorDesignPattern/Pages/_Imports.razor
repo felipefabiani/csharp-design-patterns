@@ -2,7 +2,5 @@
 @using DecoratorDesignPattern.OpenWeatherMap
 @using DecoratorDesignPattern.OpenWeatherMap.Models
 
-@inject WeatherClient weatherClient
-@inject ILogger<WeatherServiceLoggingDecorator> wsLogger
 @inject ISnackbar snackbar
-@inject IMemoryCache memoryCache 
+@inject IWeatherService weatherService 

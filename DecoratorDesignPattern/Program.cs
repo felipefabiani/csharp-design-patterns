@@ -21,6 +21,11 @@ builder.Services.AddHttpClient<WeatherClient>();
 
 builder.Services.AddMemoryCache();
 
+builder.Services.AddScoped<IWeatherService, WeatherService>();
+builder.Services.Decorate<IWeatherService>((inner, provider) => new WeatherServiceLoggingDecorator(inner, provider.GetService<ILogger<WeatherServiceLoggingDecorator>>()!));
+builder.Services.Decorate<IWeatherService>((inner, provider) => new WeatherServiceCachingDecorator(inner, provider.GetService<IMemoryCache>()!));
+builder.Services.Decorate<IWeatherService>((inner, provider) => new WeatherServiceSnackbarDecorator(inner, provider.GetService<ISnackbar>()!));
+
 builder.Services.AddMudServices(config =>
 {
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;

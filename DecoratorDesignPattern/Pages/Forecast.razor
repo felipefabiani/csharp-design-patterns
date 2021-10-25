@@ -72,15 +72,8 @@
     private LocationForecast locationForecast = LocationForecast.BadRequest();
     private List<WeatherForecast> weatherForecasts = new();
     
-    private IWeatherService weatherService;
     protected override async Task OnInitializedAsync()
     {
-        IWeatherService ws = new WeatherService(weatherClient);
-        IWeatherService wsLogging = new WeatherServiceLoggingDecorator(ws, wsLogger);
-        IWeatherService wsCaching = new WeatherServiceCachingDecorator(wsLogging, memoryCache);
-        IWeatherService wsSnackbar = new WeatherServiceSnackbarDecorator(wsCaching, snackbar);
-        weatherService = wsSnackbar;
-
         await GetForecast(cityName);
     }
     private async Task OnClickAsync()
@@ -108,7 +101,6 @@
             await OnClickAsync();
         }
     }
-
 
     private bool FilterFunc1(WeatherForecast element) => FilterFunc(element, searchString1);
 
