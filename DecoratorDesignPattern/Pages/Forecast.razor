@@ -1,0 +1,121 @@
+﻿@page "/forecast"
+@inject ISnackbar Snackbar
+
+<MudPaper>
+    <MudList Clickable="false">
+        <MudListItem>
+            <MudInput T="string"
+                @bind-Value="location"
+                Placeholder="Location" Variant="Variant.Text" Margin="Margin.Dense" 
+                Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" OnAdornmentClick="OnClickAsync"
+                Clearable="true" Immediate="true"
+                OnKeyDown="Enter"></MudInput>
+        </MudListItem>
+        <MudDivider />
+        <MudListItem>
+            <MudTable Items="@weatherForecasts" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped" Filter="new Func<WeatherForecast,bool>(FilterFunc1)">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Forecast for @cityName</MudText>
+                    <MudSpacer />
+                    <MudTextField @bind-Value="searchString1" Placeholder="Search"
+                                  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"
+                                  Clearable="true" Class="mt-0">
+                    </MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<WeatherForecast, object>(x=>x.ForecastTime)" >Forecast Time</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.Conditions)" >Conditions</MudTableSortLabel></MudTh>
+                    <MudTh>Temp (C)</MudTh>
+                    <MudTh>Humidity (%)</MudTh>
+                    <MudTh>Barometer (in/Hg)</MudTh>
+                    <MudTh>Wind (km/h)</MudTh>
+                    <MudTh>Cloud Cover (%)</MudTh>
+                    <MudTh>Rain</MudTh>
+                    <MudTh>Snow</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="ForecastTime">@context.ForecastTime</MudTd>
+                    <MudTd DataLabel="Conditions">@context.Conditions</MudTd>
+                    <MudTd DataLabel="Temperature">@context.Temperature.ToString("#0.0")&deg;</MudTd>
+                    <MudTd DataLabel="Humidity">@context.Humidity</MudTd>
+                    <MudTd DataLabel="Pressure">@context.Pressure.ToString("00.00")</MudTd>
+                    <MudTd DataLabel="WindDirection">@context.WindDirection.Abbreviation @context.WindSpeed.ToString("#0.0")</MudTd>
+                    <MudTd DataLabel="CloudCover">@context.CloudCover</MudTd>
+                    <MudTd DataLabel="ExpectedRainfall">@context.ExpectedRainfall.ToString("0.00")</MudTd>
+                    <MudTd DataLabel="ExpectedSnowfall">@context.ExpectedSnowfall.ToString("0.00")</MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+
+            <div class="d-flex flex-wrap mt-4">
+                <MudSwitch @bind-Checked="@hover" Color="Color.Primary">Hover</MudSwitch>
+                <MudSwitch @bind-Checked="@dense" Color="Color.Primary">Dense</MudSwitch>
+                <MudSwitch @bind-Checked="@striped" Color="Color.Primary">Striped</MudSwitch>
+                <MudSwitch @bind-Checked="@bordered" Color="Color.Primary">Bordered</MudSwitch>
+                <MudSpacer />
+            </div>
+        </MudListItem>
+    </MudList>
+</MudPaper>
+
+@code {
+    private bool dense = true;
+    private bool hover = true;
+    private bool striped = true;
+    private bool bordered = false;
+    private string searchString1 = "";
+    private string searchString2 = "";
+    private string location = string.Empty;
+    private string cityName = "Dublin";
+
+    private LocationForecast locationForecast = LocationForecast.BadRequest();
+    private List<WeatherForecast> weatherForecasts = new();
+    
+    private IWeatherService weatherService;
+    protected override async Task OnInitializedAsync()
+    {
+        weatherService = new WeatherService(weatherClient);
+        await GetForecast(cityName);
+    }
+    private async Task OnClickAsync()
+    {
+        await GetForecast(location);
+    }
+    private async Task GetForecast(string loc)
+    {
+        locationForecast = await weatherService.GetForecast(loc);
+        if (locationForecast.Success)
+        {
+            cityName = loc;
+            Snackbar.Add($"City {loc} found", Severity.Success);
+            weatherForecasts = locationForecast.Forecasts;
+        }
+        else
+        {
+            Snackbar.Add(locationForecast.ErrorMessage, Severity.Error);
+        }
+    }
+    public async Task Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await OnClickAsync();
+        }
+    }
+
+
+    private bool FilterFunc1(WeatherForecast element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(WeatherForecast forecast, string searchString) => (forecast, searchString) switch
+    {
+        { searchString: var str } when string.IsNullOrWhiteSpace(str) => true,
+        { forecast: var f } => f switch
+        {
+            { Conditions: var c } when c.Contains(searchString, StringComparison.OrdinalIgnoreCase) => true,
+            { WindDirection.Abbreviation: var w } when w.Contains(searchString, StringComparison.OrdinalIgnoreCase) => true,
+            _ => false
+        },
+    };
+}

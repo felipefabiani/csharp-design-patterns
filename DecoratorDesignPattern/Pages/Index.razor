@@ -1,0 +1,148 @@
+﻿@page "/"
+@page "/home"
+
+<PageTitle>Home Page</PageTitle>
+
+<MudGrid>
+    <MudItem sm="4">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Welcome</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>Learn about the Decorator design pattern.</MudText>
+                <MudText>Be sure to have obtained an API key from OpenWeatherMap.org and placed it in your appSettings.json file.</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudLink Href="/ApiKey">Click here for instructions.</MudLink>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem sm="8">
+        <MudPaper Elevation="1">
+            <MudGrid Spacing="0">
+                @if (!currentWeather.Success)
+                {
+                    <MudItem xs="12">
+                        <MudPaper Class="ma-2 pa-1 mud-theme-error">
+                            <MudText Align="Align.Center">@currentWeather.ErrorMessage</MudText>
+                        </MudPaper>
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="12">
+                        <MudPaper Class="ma-2 pa-1 mud-theme-primary">
+                            <MudText Align="Align.Center">Observed at @currentWeather.ObservationTime</MudText>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">Conditions</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">@currentWeather.CurrentConditions.Conditions</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1">Visibility</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1">@currentWeather.CurrentConditions.Visibility.ToString("#0.00") km</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">Cloud Cover</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">@currentWeather.CurrentConditions.CloudCover%</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1">Temperature</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1">@currentWeather.CurrentConditions.Temperature.ToString("#0.0") &deg;C</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">Humidity</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">@currentWeather.CurrentConditions.Humidity.ToString("#0.0")%</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1">Barometer</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1">@currentWeather.CurrentConditions.Pressure.ToString("#0.00") in/Hg</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">Wind</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">@currentWeather.CurrentConditions.WindDirection.Abbreviation @currentWeather.CurrentConditions.WindSpeed.ToString("#0.0") km/h</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1">Rainfall (1 hour)</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1">@currentWeather.CurrentConditions.RainfallOneHour.ToString("#0.00") in</MudText>
+                    </MudItem>
+                    <MudItem xs="5">
+                        <MudText Align="Align.Left" Class="ml-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">Fetch time</MudText>
+                    </MudItem>
+                    <MudItem xs="7">
+                        <MudText Align="Align.Right" Class="mr-2 pa-1" Style="@($"background:{theme.Palette.BackgroundGrey};")">@currentWeather.FetchTime</MudText>
+                    </MudItem>
+                }
+                <MudItem xs="12">
+                    <MudInput T="string"
+                              @bind-Value="location"
+                              Label="Location"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Filled.Search"
+                              OnAdornmentClick="OnClickAsync"
+                              Clearable="true"
+                              Class="ma-2 pa-1"
+                              Immediate="true"
+                              OnKeyDown="Enter"></MudInput>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+    </MudItem>
+</MudGrid>
+
+@code {
+    [CascadingParameter]
+    private MudTheme theme { get; set; }
+
+    private CurrentWeather currentWeather = CurrentWeather.BadRequest();
+    private string location = string.Empty;
+    
+    private IWeatherService weatherService;
+    protected override async Task OnInitializedAsync()
+    {
+        weatherService = new WeatherService(weatherClient);
+        await base.OnInitializedAsync();
+        await GetCurrentWeather("Dublin");
+    }
+    private async Task OnClickAsync()
+    {
+        await GetCurrentWeather(location);
+    }
+    private async Task GetCurrentWeather(string loc)
+    {
+        currentWeather = await weatherService.GetCurrentWeather(loc);
+    }
+    public async Task Enter(KeyboardEventArgs e)
+    {
+        if (e is {Code: "Enter" } or {Code: "NumpadEnter"})
+        {
+            await OnClickAsync();
+        }
+    }
+}
