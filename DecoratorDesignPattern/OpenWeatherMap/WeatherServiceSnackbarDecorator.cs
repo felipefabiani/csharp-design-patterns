@@ -1,27 +1,32 @@
 ﻿using DecoratorDesignPattern.OpenWeatherMap.Models;
+using MudBlazor;
 using System.Diagnostics;
 
 namespace DecoratorDesignPattern.OpenWeatherMap
 {
-    public class WeatherServiceLoggingDecorator : IWeatherService
+    public class WeatherServiceSnackbarDecorator : IWeatherService
     {
         private readonly IWeatherService innerWeatherService;
-        private readonly ILogger<WeatherServiceLoggingDecorator> logger;
+        private readonly ISnackbar snackbar;
 
-        public WeatherServiceLoggingDecorator(
+        public WeatherServiceSnackbarDecorator(
             IWeatherService innerWeatherService,
-            ILogger<WeatherServiceLoggingDecorator> logger)
+            ISnackbar snackbar)
         {
             this.innerWeatherService = innerWeatherService ?? throw new ArgumentNullException(nameof(innerWeatherService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.snackbar = snackbar ?? throw new ArgumentNullException(nameof(snackbar));
         }
+
+        public ISnackbar Snackbar { get; }
 
         public async Task<CurrentWeather> GetCurrentWeather(string location)
         {
             var sw = Stopwatch.StartNew();
             var response = await innerWeatherService.GetCurrentWeather(location);
             sw.Stop();
-            logger.LogInformation($"Retrived weather location data for {location} - Elapsed ms: {sw.ElapsedMilliseconds}");
+            snackbar.Add(
+                message: $"Retrived weather location data for {location} - Elapsed ms: {sw.ElapsedMilliseconds}",
+                severity: Severity.Info);
             return response;
         }
 
@@ -30,7 +35,9 @@ namespace DecoratorDesignPattern.OpenWeatherMap
             var sw = Stopwatch.StartNew();
             var response = await innerWeatherService.GetForecast(location);
             sw.Stop();
-            logger.LogInformation($"Retrived forecast location data for {location} - Elapsed ms: {sw.ElapsedMilliseconds}");
+            snackbar.Add(
+                message: $"Retrived forecast location data for {location} - Elapsed ms: {sw.ElapsedMilliseconds}",
+                severity: Severity.Info);
             return response;
         }
     }

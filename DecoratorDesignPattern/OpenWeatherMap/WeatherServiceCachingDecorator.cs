@@ -9,7 +9,7 @@ namespace DecoratorDesignPattern.OpenWeatherMap
         private readonly IMemoryCache memoryCache;
 
         public WeatherServiceCachingDecorator(
-            IWeatherService innerWeatherService, 
+            IWeatherService innerWeatherService,
             IMemoryCache memoryCache)
         {
             this.innerWeatherService = innerWeatherService ?? throw new ArgumentNullException(nameof(innerWeatherService));

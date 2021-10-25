@@ -77,7 +77,9 @@
     {
         IWeatherService ws = new WeatherService(weatherClient);
         IWeatherService wsLogging = new WeatherServiceLoggingDecorator(ws, wsLogger);
-        weatherService = new WeatherServiceCachingDecorator(wsLogging, memoryCache);
+        IWeatherService wsCaching = new WeatherServiceCachingDecorator(wsLogging, memoryCache);
+        IWeatherService wsSnackbar = new WeatherServiceSnackbarDecorator(wsCaching, snackbar);
+        weatherService = wsSnackbar;
 
         await GetForecast(cityName);
     }
