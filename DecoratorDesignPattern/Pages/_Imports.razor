@@ -2,3 +2,5 @@
 @using DecoratorDesignPattern.OpenWeatherMap.Models
 
 @inject WeatherClient weatherClient
+@inject ILogger<WeatherServiceLoggingDecorator> wsLogger
+@inject ISnackbar snackbar

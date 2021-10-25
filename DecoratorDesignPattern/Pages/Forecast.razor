@@ -1,5 +1,4 @@
 ﻿@page "/forecast"
-@inject ISnackbar Snackbar
 
 <MudPaper>
     <MudList Clickable="false">
@@ -76,7 +75,9 @@
     private IWeatherService weatherService;
     protected override async Task OnInitializedAsync()
     {
-        weatherService = new WeatherService(weatherClient);
+        IWeatherService ws = new WeatherService(weatherClient);
+        weatherService = new WeatherServiceLoggingDecorator(ws, wsLogger);
+
         await GetForecast(cityName);
     }
     private async Task OnClickAsync()
@@ -89,12 +90,12 @@
         if (locationForecast.Success)
         {
             cityName = loc;
-            Snackbar.Add($"City {loc} found", Severity.Success);
+            snackbar.Add($"City {loc} found", Severity.Success);
             weatherForecasts = locationForecast.Forecasts;
         }
         else
         {
-            Snackbar.Add(locationForecast.ErrorMessage, Severity.Error);
+            snackbar.Add(locationForecast.ErrorMessage, Severity.Error);
         }
     }
     public async Task Enter(KeyboardEventArgs e)
