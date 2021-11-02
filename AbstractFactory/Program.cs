@@ -1,5 +1,6 @@
 ﻿using AbstractFactory.Business;
 using AbstractFactory.Business.Models.Commerce;
+using AbstractFactory.Business.Models.Shipping.Factories;
 
 namespace AbstractFactory;
 public class Program
@@ -7,7 +8,7 @@ public class Program
     static void Main()
     {
         var order = CreateOrder();
-        var cart = new ShoppingCart(order);
+        var cart = new ShoppingCart(order, new StandardShippingProviderFactory());
         Finalize(cart);
 
         static Order CreateOrder()

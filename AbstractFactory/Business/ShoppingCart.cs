@@ -6,15 +6,17 @@ namespace AbstractFactory.Business;
 public class ShoppingCart
 {
     private readonly Order _order;
+    private readonly ShippingProviderFactory _shippingProviderFactory;
 
-    public ShoppingCart(Order order)
+    public ShoppingCart(Order order, ShippingProviderFactory shippingProviderFactory)
     {
         _order = order;
+        _shippingProviderFactory = shippingProviderFactory;
     }
 
     public string Finalize()
     {
-        var shippingProvider = ShippingProviderFactory.CreateShippingProvider(_order.Sender.Country);
+        var shippingProvider = _shippingProviderFactory.GetShippingProvider(_order.Sender.Country);
 
         _order.ShippingStatus = ShippingStatus.ReadyForShippment;
 
