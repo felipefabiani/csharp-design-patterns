@@ -3,5 +3,7 @@ global using AbstractFactory.Business.Models.Commerce;
 global using AbstractFactory.Business.Models.Shipping;
 global using AbstractFactory.Business.Models.Shipping.Factories;
 global using AbstractFactory.Tests.Common;
+global using AbstractFactory.Tests.Common.Orders;
 global using Shouldly;
+global using System;
 global using Xunit;

@@ -1,4 +1,4 @@
-namespace AbstractFactory.Tests.Common;
+namespace AbstractFactory.Tests.Common.Orders;
 public abstract class OrderFactory
 {
     protected abstract Order CreateOrder();

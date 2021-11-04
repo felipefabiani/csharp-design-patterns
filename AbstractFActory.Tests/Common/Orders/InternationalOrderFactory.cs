@@ -1,4 +1,4 @@
-﻿namespace AbstractFactory.Tests.Common;
+﻿namespace AbstractFactory.Tests.Common.Orders;
 public class InternationalOrderFactory : OrderFactory
 {
     protected override Order CreateOrder()
