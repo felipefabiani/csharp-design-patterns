@@ -7,7 +7,7 @@ public class Program
     static void Main()
     {
         var order = CreateOrder();
-        var cart = GetShoppingCart(order);
+        var cart = GetShoppingCart();
         Finalize(cart);
 
         static Order CreateOrder()
@@ -42,12 +42,14 @@ public class Program
             order.LineItems.Add(new Item("CONSULTING", "Building a website", 100m), 1);
             return order;
         }
-        static ShoppingCart GetShoppingCart(Order order) => order switch
+        ShoppingCart GetShoppingCart()
         {
-            { Sender.Country: Country.Brazil } => new ShoppingCart(order, new BrazilPurchaseProviderFactory()),
-            { Sender.Country: Country.Australia } => new ShoppingCart(order, new AustraliaPurchaseProviderFactory()),
-            _ => throw new NotSupportedException("Sender country has no purchase provider")
-        };
+            var factoryProvider = new PurchaseProviderFactoryProvider();
+            IPurchaseProviderFactory purchaseProviderFactory = 
+                factoryProvider.CreateFactoryFor(order.Sender.Country.ToString());
+
+            return new ShoppingCart(order, purchaseProviderFactory);
+        }
     }
 
     public static string Finalize(ShoppingCart cart)
