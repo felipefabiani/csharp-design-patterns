@@ -11,13 +11,9 @@
             ArgumentNullException.ThrowIfNull(nameof(_context));
         }
 
-        public async Task<IReadOnlyList<MovieEntity>> GetList(MovieSearchVM movieSearchVM)
-            => await _context.Movies
-                .Where(x =>
-                    (x.MpaaRating <= MpaaRating.PG || !movieSearchVM.IsForKidOnly) &&
-                    x.Rating >= movieSearchVM.MinimumRating &&
-                    (x.ReleaseDate <= DateTimeOffset.Now.AddYears(-6) || !movieSearchVM.IsAvailableOnCD)
-                ).ToListAsync();
+        public async Task<IReadOnlyList<MovieEntity>> GetList(
+            Expression<Func<MovieEntity, bool>> expression)
+            => await _context.Movies.Where(expression).ToListAsync();
 
         public void Dispose()
         {

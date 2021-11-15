@@ -2,6 +2,6 @@
 {
     public interface IMovieService
     {
-        Task<IReadOnlyList<MovieEntity>> GetList(MovieSearchVM movieSearchVM);
+        Task<IReadOnlyList<MovieEntity>> GetList(Expression<Func<MovieEntity, bool>> expression);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SpecificationDesignPattern.Logic.Utils;
+using System.Linq.Expressions;
 
 namespace SpecificationDesignPattern.Logic.Movies;
 public class MovieEntity : Entity
@@ -12,8 +13,6 @@ public class MovieEntity : Entity
     protected MovieEntity()
     {
     }
-
-    public virtual bool IsSuitableForChildren() => MpaaRating <= MpaaRating.PG;
-
-    public virtual bool HasCDVersion() => ReleaseDate <= DateTime.Now.AddMonths(-6);
+    public static readonly Expression<Func<MovieEntity, bool>> IsSuitableForChildren = x => x.MpaaRating <= MpaaRating.PG;
+    public static readonly Expression<Func<MovieEntity, bool>> HasCDVersion = x => x.ReleaseDate <= DateTime.Now.AddYears(-6);
 }

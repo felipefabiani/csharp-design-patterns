@@ -29,7 +29,9 @@
     {
         ArgumentNullException.ThrowIfNull(SelectedMovie);
 
-        if (SelectedMovie.ReleaseDate >= DateTime.Now.AddYears(-6))
+        var isAvailableOnCD = MovieEntity.HasCDVersion.Compile();
+
+        if (!isAvailableOnCD(SelectedMovie))
         {
             Snackbar.Add("The movie doesn't have a CD version", Severity.Error);
             return;
@@ -42,7 +44,9 @@
     {
         ArgumentNullException.ThrowIfNull(SelectedMovie);
 
-        if (!SelectedMovie.IsSuitableForChildren())
+        var isSuitableForChildren = MovieEntity.IsSuitableForChildren.Compile();
+
+        if (!isSuitableForChildren(SelectedMovie))
         {
             Snackbar.Add("The movie is not suitable for children", Severity.Error);
             return;
