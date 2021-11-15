@@ -1,11 +1,4 @@
-﻿using Logic.Movies;
-using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
-using SpecificationDesignPattern.Logic;
-using SpecificationDesignPattern.Logic.Movies;
-using SpecificationDesignPattern.Logic.ViewModels;
-
-namespace SpecificationDesignPattern.UI.Components.Movies;
+﻿namespace SpecificationDesignPattern.UI.Components.Movies;
 
 public partial class MovieListComponent
 {
@@ -47,8 +40,8 @@ public partial class MovieListComponent
             _loading = true;
 
             Expression<Func<MovieEntity, bool>> expression = MovieSearch.IsForKidOnly ?
-                MovieEntity.IsSuitableForChildren :
-                x => true;           
+                MovieEntity.IsSuitableForChildren.Expression :
+                x => true;
 
             _movies = await MovieService.GetList(expression);
         }
