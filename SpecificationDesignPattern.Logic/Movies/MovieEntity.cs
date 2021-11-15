@@ -13,8 +13,8 @@ public class MovieEntity : Entity
     {
     }
 
-    public static readonly GenericSpecification<MovieEntity> IsSuitableForChildren = new (x => x.MpaaRating <= MpaaRating.PG);
-    public static readonly GenericSpecification<MovieEntity> HasCDVersion = new (x => x.ReleaseDate <= DateTime.Now.AddYears(-6));
+    public static readonly MovieForKidsSpecification IsSuitableForChildren = new();
+    public static readonly AvailableOnCdSpecification HasCDVersion = new();
 
 
 }

@@ -1,4 +1,6 @@
-﻿namespace Logic.Movies
+﻿using SpecificationDesignPattern.Logic.Helpers;
+
+namespace Logic.Movies
 {
     public class MovieService : IMovieService, IDisposable
     {
@@ -11,13 +13,13 @@
             ArgumentNullException.ThrowIfNull(nameof(_context));
         }
 
-        public async Task<IReadOnlyList<MovieEntity>> GetList(
-            Expression<Func<MovieEntity, bool>> expression)
-            => await _context.Movies.Where(expression).ToListAsync();
+        public async Task<IReadOnlyList<MovieEntity>> GetList(Specification<MovieEntity> specification)
+            => await _context.Movies.Where(specification.ToExpression()).ToListAsync();
 
         public void Dispose()
         {
             _context?.Dispose();
         }
+
     }
 }

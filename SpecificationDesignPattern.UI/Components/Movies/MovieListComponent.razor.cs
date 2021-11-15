@@ -39,11 +39,7 @@ public partial class MovieListComponent
         {
             _loading = true;
 
-            Expression<Func<MovieEntity, bool>> expression = MovieSearch.IsForKidOnly ?
-                MovieEntity.IsSuitableForChildren.Expression :
-                x => true;
-
-            _movies = await MovieService.GetList(expression);
+            _movies = await MovieService.GetList(MovieEntity.IsSuitableForChildren);
         }
         catch (Exception ex)
         {
