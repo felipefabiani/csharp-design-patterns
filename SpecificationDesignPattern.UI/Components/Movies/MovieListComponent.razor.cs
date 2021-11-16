@@ -1,4 +1,5 @@
-﻿using SpecificationDesignPattern.Logic.Helpers;
+﻿using MudBlazor;
+using SpecificationDesignPattern.Logic.Helpers;
 
 namespace SpecificationDesignPattern.UI.Components.Movies;
 
@@ -11,6 +12,9 @@ public partial class MovieListComponent
     public MovieSearchVM? MovieSearch { get; set; }
 
     [Inject] IMovieService MovieService { get; set; } = null!;
+
+    private MudTable<MovieEntity> _table;
+    private int _total = 0;
 
     private bool _dense = false;
     private bool _hover = true;
@@ -30,11 +34,11 @@ public partial class MovieListComponent
             _ => false
         };
 
-    protected override async Task OnParametersSetAsync()
+    private async Task<TableData<MovieEntity>> ServerReload(TableState state)
     {
         if (MovieSearch is null)
         {
-            return;
+            return new TableData<MovieEntity>() { TotalItems = _total, Items = _movies };
         }
 
         try
@@ -42,26 +46,35 @@ public partial class MovieListComponent
             _loading = true;
             var spec = Specification<MovieEntity>.All;
 
-            if (MovieSearch.IsForKidOnly)
+            if (MovieSearch?.IsForKidOnly == true)
             {
                 spec = spec.And(MovieEntity.IsSuitableForChildren);
             }
 
-            if (MovieSearch.IsAvailableOnCD)
+            if (MovieSearch?.IsAvailableOnCD == true)
             {
                 spec = spec.And(MovieEntity.HasCDVersion);
             }
 
-            _movies = await MovieService.GetList(spec);
+            (_movies, _total) = await MovieService.GetList(spec,
+                MovieSearch?.MinimumRating ?? 0,
+                _table.CurrentPage,
+                _table.RowsPerPage);
         }
         catch (Exception ex)
         {
-            Snackbar.Add(ex.Message, MudBlazor.Severity.Error);
-            Snackbar.Add("Unexpected error.", MudBlazor.Severity.Error);
+            Snackbar.Add(ex.Message, Severity.Error);
+            Snackbar.Add("Unexpected error.", Severity.Error);
         }
         finally
         {
             _loading = false;
         }
+        return new TableData<MovieEntity>() { TotalItems = _total, Items = _movies};
+        
+    }
+    protected override void OnParametersSet()
+    {
+        _table?.ReloadServerData();
     }
 }

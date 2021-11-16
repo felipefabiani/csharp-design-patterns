@@ -1,12 +1,15 @@
-﻿<MudTable Items="@_movies" Dense="@_dense"
+﻿<MudTable 
+          Dense="@_dense"
           Hover="@_hover" Bordered="@_bordered"
-          Striped="@_striped" Loading="@_loading"
-          Filter="new Func<MovieEntity,bool>(FilterFunc1)"
+          Striped="@_striped"
+          
           SelectedItemChanged=@( async (MovieEntity value) => {
               _selectedItem1 = value;
               await OnMovieSelected.InvokeAsync(value);
           })
-          Class="pa-2 ma-2">
+          Class="pa-2 ma-2"
+          ServerData="@(new Func<TableState, Task<TableData<MovieEntity>>>(ServerReload))"
+          @ref="_table">
 
     <ToolBarContent>
         <MudText Typo="Typo.h6">Movies</MudText>
@@ -31,8 +34,11 @@
         <MudTd DataLabel="MPAA">@context.MpaaRating.ToString()</MudTd>
         <MudTd DataLabel="Rating">@context.Rating</MudTd>
     </RowTemplate>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
     <PagerContent>
-        <MudTablePager />
+        <MudTablePager PageSizeOptions="@(new int[]{2,5,10})" />
     </PagerContent>
 </MudTable>
 <div class="d-flex flex-wrap mt-4">
