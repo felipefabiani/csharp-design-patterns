@@ -1,4 +1,6 @@
-﻿namespace SpecificationDesignPattern.UI.Components.Movies;
+﻿using SpecificationDesignPattern.Logic.Helpers;
+
+namespace SpecificationDesignPattern.UI.Components.Movies;
 
 public partial class MovieListComponent
 {
@@ -38,8 +40,19 @@ public partial class MovieListComponent
         try
         {
             _loading = true;
+            var spec = Specification<MovieEntity>.All;
 
-            _movies = await MovieService.GetList(MovieEntity.IsSuitableForChildren);
+            if (MovieSearch.IsForKidOnly)
+            {
+                spec = spec.And(MovieEntity.IsSuitableForChildren);
+            }
+
+            if (MovieSearch.IsAvailableOnCD)
+            {
+                spec = spec.And(MovieEntity.HasCDVersion);
+            }
+
+            _movies = await MovieService.GetList(spec);
         }
         catch (Exception ex)
         {
