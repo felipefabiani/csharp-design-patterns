@@ -8,6 +8,7 @@ public class MovieEntity : Entity
     public MpaaRating MpaaRating { get; } = MpaaRating.G;
     public string Genre { get; } = string.Empty;
     public decimal Rating { get; } = 0M;
+    public DirectorEntity Director { get; set; } = null!;
 
     protected MovieEntity()
     {
@@ -15,6 +16,4 @@ public class MovieEntity : Entity
 
     public static readonly MovieForKidsSpecification IsSuitableForChildren = new();
     public static readonly AvailableOnCdSpecification HasCDVersion = new();
-
-
 }

@@ -36,5 +36,7 @@ public class MovieIEntityTypeConfiguration : IEntityTypeConfiguration<MovieEntit
             .Property(m => m.Rating)
             .IsRequired();
 
+        builder
+            .HasOne(m => m.Director);
     }
 }

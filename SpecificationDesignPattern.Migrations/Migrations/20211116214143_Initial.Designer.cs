@@ -12,7 +12,7 @@ using SpecificationDesignPattern.Logic;
 namespace SpecificationDesignPattern.Migrations.Migrations
 {
     [DbContext(typeof(SpecPatternReadDbContext))]
-    [Migration("20211113190108_Initial")]
+    [Migration("20211116214143_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace SpecificationDesignPattern.Migrations.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("SpecificationDesignPattern.Logic.Movies.Movie", b =>
+            modelBuilder.Entity("SpecificationDesignPattern.Logic.Movies.MovieEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,13 +38,8 @@ namespace SpecificationDesignPattern.Migrations.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<long>("MovieId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("MovieID");
-
-                    b.Property<string>("MpaaRating")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("MpaaRating")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -52,8 +47,8 @@ namespace SpecificationDesignPattern.Migrations.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<double>("Rating")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Rating")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTimeOffset>("ReleaseDate")
                         .HasColumnType("datetimeoffset");

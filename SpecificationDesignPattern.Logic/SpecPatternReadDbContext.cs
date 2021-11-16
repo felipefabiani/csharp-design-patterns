@@ -8,6 +8,7 @@ public class SpecPatternReadDbContext : DbContext
     }
 
     public virtual DbSet<MovieEntity> Movies { get; set; } = null!;
+    public virtual DbSet<DirectorEntity> Directors { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

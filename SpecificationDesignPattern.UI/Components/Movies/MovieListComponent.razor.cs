@@ -13,14 +13,13 @@ public partial class MovieListComponent
 
     [Inject] IMovieService MovieService { get; set; } = null!;
 
-    private MudTable<MovieEntity> _table;
+    private MudTable<MovieEntity> _table = null!;
     private int _total = 0;
 
     private bool _dense = false;
     private bool _hover = true;
     private bool _striped = true;
     private bool _bordered = false;
-    private bool _loading = false;
     private string _searchString1 = string.Empty;
     private MovieEntity? _selectedItem1 = null;
 
@@ -43,7 +42,6 @@ public partial class MovieListComponent
 
         try
         {
-            _loading = true;
             var spec = Specification<MovieEntity>.All;
 
             if (MovieSearch?.IsForKidOnly == true)
@@ -66,12 +64,9 @@ public partial class MovieListComponent
             Snackbar.Add(ex.Message, Severity.Error);
             Snackbar.Add("Unexpected error.", Severity.Error);
         }
-        finally
-        {
-            _loading = false;
-        }
-        return new TableData<MovieEntity>() { TotalItems = _total, Items = _movies};
-        
+
+        return new TableData<MovieEntity>() { TotalItems = _total, Items = _movies };
+
     }
     protected override void OnParametersSet()
     {

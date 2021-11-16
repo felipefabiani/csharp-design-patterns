@@ -18,12 +18,13 @@ namespace SpecificationDesignPattern.Migrations.Migrations
                     ReleaseDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     MpaaRating = table.Column<int>(type: "int", nullable: false),
                     Genre = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
-                    Rating = table.Column<decimal>(type: "decimal(5, 2)", nullable: false)
+                    Rating = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Movie", x => x.Id);
                 });
+
             migrationBuilder.Sql(@"
 SET ANSI_PADDING OFF
 GO

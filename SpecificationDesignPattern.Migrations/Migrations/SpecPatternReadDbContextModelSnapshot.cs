@@ -11,7 +11,7 @@ using SpecificationDesignPattern.Logic;
 namespace SpecificationDesignPattern.Migrations.Migrations
 {
     [DbContext(typeof(SpecPatternReadDbContext))]
-    partial class SpecPatternDbContextModelSnapshot : ModelSnapshot
+    partial class SpecPatternReadDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace SpecificationDesignPattern.Migrations.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("SpecificationDesignPattern.Logic.Movies.Movie", b =>
+            modelBuilder.Entity("SpecificationDesignPattern.Logic.Movies.DirectorEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,18 +30,35 @@ namespace SpecificationDesignPattern.Migrations.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Director", (string)null);
+                });
+
+            modelBuilder.Entity("SpecificationDesignPattern.Logic.Movies.MovieEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<long>("DirectorId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Genre")
                         .IsRequired()
                         .HasMaxLength(20)
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<long>("MovieId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("MovieID");
-
                     b.Property<int>("MpaaRating")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -50,16 +67,29 @@ namespace SpecificationDesignPattern.Migrations.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<double>("Rating")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Rating")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTimeOffset>("ReleaseDate")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DirectorId");
+
                     b.ToTable("Movie", (string)null);
-                });            
+                });
+
+            modelBuilder.Entity("SpecificationDesignPattern.Logic.Movies.MovieEntity", b =>
+                {
+                    b.HasOne("SpecificationDesignPattern.Logic.Movies.DirectorEntity", "Director")
+                        .WithMany()
+                        .HasForeignKey("DirectorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Director");
+                });
 #pragma warning restore 612, 618
         }
     }

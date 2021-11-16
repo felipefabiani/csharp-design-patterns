@@ -25,6 +25,7 @@
         <MudTh>Genre</MudTh>
         <MudTh>MPAA</MudTh>
         <MudTh>Rating</MudTh>
+        <MudTh>Director</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
@@ -33,6 +34,7 @@
         <MudTd DataLabel="Genre">@context.Genre</MudTd>
         <MudTd DataLabel="MPAA">@context.MpaaRating.ToString()</MudTd>
         <MudTd DataLabel="Rating">@context.Rating</MudTd>
+        <MudTd DataLabel="Director">@context.Director.Name</MudTd>
     </RowTemplate>
     <LoadingContent>
         <MudText>Loading...</MudText>
