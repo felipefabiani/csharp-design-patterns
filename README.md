@@ -11,4 +11,4 @@ Separate the search criteria from the object that performs the search.
 
 ## Structure
 
-![enter image description here](https://github.com/felipefabiani/csharp-design-patterns/tree/behavioral/specification/Images/Specification.png)
+![enter image description here](https://github.com/felipefabiani/csharp-design-patterns/blob/behavioral/specification/Images/Specification.png)
