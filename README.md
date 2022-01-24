@@ -45,12 +45,14 @@ and divided into three groups.
 
 ## List of implemented Partterns
 
-### Creational Patterns
+### Behavioral Patterns
+- [Specification (Balzor, MudBlazor);](https://github.com/felipefabiani/csharp-design-patterns/tree/structural/Specification)
 
+### Creational Patterns
 - Abstract Factory
 
 ### Structural Patterns
+- Decorator
 
-- [Specification (Balzor, MudBlazor);](https://github.com/felipefabiani/csharp-design-patterns/tree/structural/Specification)
 
-### Behavioral Patterns
+
